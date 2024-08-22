@@ -2,7 +2,7 @@
   "name": "job-scraper",
   "version": "1.0.0",
   "scripts": {
-    "build": "node build.js"
+    "build": "node build.js && node pack-extension.js"
   },
   "devDependencies": {
     "dotenv": "^10.0.0"

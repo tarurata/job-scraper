@@ -30,7 +30,8 @@ function saveToGoogleSheets(data) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            values: [[data.jobTitle, data.company, data.location, data.description, data.url]]
+            majorDimension: "ROWS",
+            values: [[new Date().toISOString().split('T')[0], data.jobTitle, data.company, data.location, data.description, data.url]]
         })
     })
         .then(response => response.json())
