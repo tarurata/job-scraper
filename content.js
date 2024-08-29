@@ -1,4 +1,26 @@
 function scrapeJobData() {
+    const pageType = determinePageType();
+    const scraper = getScraperForPageType(pageType);
+    return scraper();
+}
+
+function determinePageType() {
+    return 'indeed';
+}
+
+function getScraperForPageType(pageType) {
+    const scrapers = {
+        indeed: scrapeIndeedJob,
+        glassdoor: scrapeGlassdoorJob,
+    };
+    return scrapers[pageType] || scrapers.indeed;
+}
+
+function scrapeGlassdoorJob() {
+    // Scraping logic for Glassdoor jobs
+}
+
+function scrapeIndeedJob() {
     const jobTitle = document.querySelector('h2[data-testid="jobsearch-JobInfoHeader-title"]')?.textContent.trim() || document.querySelector('div[data-testid="jobDetailTitle"]')?.textContent.trim() || 'N/A';
     const company = document.querySelector('[data-company-name]')?.textContent.trim() || document.querySelector('div[data-testid="jobDetailSubtitle"]')?.textContent.trim() || 'N/A';
     const location = document.querySelector('[data-testid=job-location]')?.textContent.trim() || 'N/A';
@@ -17,6 +39,7 @@ function scrapeJobData() {
     return { jobTitle, company, location, description, url };
 }
 
+// Send job data to background.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'scrapeJob') {
         console.log("Now sending from content.js");
