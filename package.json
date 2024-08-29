@@ -5,6 +5,11 @@
     "build": "node build.js && node pack-extension.js"
   },
   "devDependencies": {
-    "dotenv": "^10.0.0"
+    "@types/chrome": "^0.0.270",
+    "dotenv": "^10.0.0",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "@types/node": "^22.5.1"
   }
 }

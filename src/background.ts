@@ -1,15 +1,14 @@
 const SHEET_ID = '__SHEET_ID__';
 
-let accessToken = null;
+let accessToken: string | null = null;
 
-function getAuthToken(maxAttempts = 3, delay = 1000) {
+function getAuthToken(maxAttempts: number = 3, delay: number = 1000): Promise<string> {
     return new Promise((resolve, reject) => {
-        let attempts = 0;
+        let attempts: number = 0;
 
-        // Sometimes, the token is not received, so we retry
-        function attemptGetToken() {
+        function attemptGetToken(): void {
             attempts++;
-            chrome.identity.getAuthToken({ interactive: true }, function(token) {
+            chrome.identity.getAuthToken({ interactive: true }, (token: string | undefined) => {
                 if (chrome.runtime.lastError) {
                     console.error(`Auth error (attempt ${attempts}):`, chrome.runtime.lastError);
                     if (attempts < maxAttempts) {
@@ -36,37 +35,45 @@ function getAuthToken(maxAttempts = 3, delay = 1000) {
 }
 
 getAuthToken()
-    .then(token => {
+    .then((token: string) => {
         accessToken = token;
     })
-    .catch(errorMessage => {
+    .catch((errorMessage: string) => {
         console.error(errorMessage);
     });
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((request: any, sender: chrome.runtime.MessageSender, sendResponse: (response?: any) => void) => {
     if (request.action === 'saveToSheets') {
         saveToGoogleSheets(request.data);
     }
 });
 
-function saveToGoogleSheets(data) {
+interface SheetData {
+    jobTitle: string;
+    company: string;
+    location: string;
+    description: string;
+    url: string;
+}
+
+function saveToGoogleSheets(data: SheetData): void {
     if (!accessToken) {
         console.error('Access token is not set');
         // Attempt to get the token again
         getAuthToken()
-            .then(token => {
+            .then((token: string) => {
                 accessToken = token;
                 saveToGoogleSheets(data); // Retry the save operation
             })
-            .catch(errorMessage => {
+            .catch((errorMessage: string) => {
                 console.error(errorMessage);
             });
         return;
     }
     console.log('saveToGoogleSheets called with data:', data);
-    const sheetId = SHEET_ID;
-    const range = 'A1:P1000';
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}:append?valueInputOption=USER_ENTERED`;
+    const sheetId: string = SHEET_ID;
+    const range: string = 'A1:P1000';
+    const url: string = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}:append?valueInputOption=USER_ENTERED`;
 
     fetch(url, {
         method: 'POST',
