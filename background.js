@@ -38,11 +38,9 @@ function getAuthToken(maxAttempts = 3, delay = 1000) {
 getAuthToken()
     .then(token => {
         accessToken = token;
-        // Proceed with using the token
     })
     .catch(errorMessage => {
         console.error(errorMessage);
-        // Handle the error (e.g., show a notification to the user)
     });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -62,7 +60,6 @@ function saveToGoogleSheets(data) {
             })
             .catch(errorMessage => {
                 console.error(errorMessage);
-                // Notify the user that the operation failed due to authentication issues
             });
         return;
     }
