@@ -84,6 +84,15 @@ function build() {
         fs.mkdirSync('dist');
     }
 
+    // Copy non-TS assets from src/ to dist/ (TypeScript only emits .js files).
+    const assetsToCopy = [
+        'manifest.json',
+        'popup.html',
+    ];
+    assetsToCopy.forEach(filename => {
+        copyFile(path.join(__dirname, 'src', filename), path.join(__dirname, 'dist', filename));
+    });
+
     // List of files to process
     const filesToProcess = [
         'manifest.json',
