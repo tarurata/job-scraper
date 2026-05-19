@@ -102,3 +102,6 @@ dist
 # config.js
 config.js
 private_key.pem
+dist.pem
+dist.crx
+sample_html/
