@@ -83,7 +83,7 @@ function saveToGoogleSheets(data: SheetData): void {
         },
         body: JSON.stringify({
             majorDimension: "ROWS",
-            values: [[new Date().toISOString().split('T')[0], data.jobTitle, data.company, data.location, data.description, data.url]]
+            values: [[new Date().toLocaleDateString('en-CA', { timeZone: 'America/Vancouver' }), data.jobTitle, data.company, data.location, data.description, data.url]]
         })
     })
         .then(response => response.json())
